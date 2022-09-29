@@ -7,6 +7,7 @@ import { RecordsListComponent } from './records-list/records-list.component';
 const routes: Routes = [
   {path: '', component: HomeComponent, pathMatch: 'full'},
   {path: 'records/add', component: RecordAddEditComponent},
+  {path: 'records/edit/:id', component: RecordAddEditComponent},
   {path: 'records', component: RecordsListComponent},
 ];
 

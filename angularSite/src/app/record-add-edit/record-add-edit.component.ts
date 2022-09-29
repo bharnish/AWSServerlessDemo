@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DbRecord } from '../api/models';
 import { ValuesService } from '../api/services';
 
@@ -9,20 +10,43 @@ import { ValuesService } from '../api/services';
 })
 export class RecordAddEditComponent implements OnInit {
 
-  constructor(private svc: ValuesService) { }
+  constructor(private svc: ValuesService, private routed: ActivatedRoute) { }
 
   model: DbRecord = {};
   isSaving = false;
+  isAdd = false;
+  id = '';
 
   ngOnInit(): void {
+    this.routed.paramMap.subscribe(p => {
+      this.id = p.get('id')??'';
+
+      this.isAdd = this.id == '';
+
+      this.load();
+
+    })
   }
 
+  load() {
+    if (this.isAdd) return;
+    this.svc.getApiValuesId(this.id).subscribe(x => {
+      this.model = x;
+    });
+  }
 
   save() {
     this.isSaving = true;
-    this.svc.postApiValues({value: this.model.value}).subscribe(x => {
-      this.isSaving = false;
-    });
+    if (this.isAdd) {
+
+      this.svc.postApiValues(this.model).subscribe(x => {
+        this.isSaving = false;
+      });
+    } else {
+      this.svc.putApiValuesId({id: this.id, body: this.model}).subscribe(_ => {
+        this.isSaving = false;
+      });
+    }
   }
 
 }

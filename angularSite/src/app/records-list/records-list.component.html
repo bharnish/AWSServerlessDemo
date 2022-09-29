@@ -7,6 +7,7 @@
                         <div class="flex-grow-1">
                             {{rec.id}}
                         </div>
+                        <a [routerLink]="['edit',rec.id]" class="text-white"><i class="bi bi-pencil me-2"></i></a>
                         <a (click)="delete(rec)" class="text-white"><i class="bi bi-trash"></i></a>
                     </div>
                     <p>{{rec.value}}</p>
