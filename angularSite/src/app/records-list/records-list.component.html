@@ -1,27 +1,44 @@
 <div class="container">
-    <div *ngIf="!isLoading; else Loading">
-        <div *ngIf="records.length; else Empty">
-            <div class="card my-3" *ngFor="let rec of records">
-                <div class="card-body">
-                    <div class="card-title d-flex text-center bg-primary text-white p-2">
-                        <div class="flex-grow-1">
-                            {{rec.id}}
-                        </div>
-                        <a [routerLink]="['edit',rec.id]" class="text-white"><i class="bi bi-pencil me-2"></i></a>
-                        <a (click)="delete(rec)" class="text-white"><i class="bi bi-trash"></i></a>
+
+    <div class="my-3">
+        <input type="checkbox" class="btn-check" name="add" id="add" data-bs-toggle="collapse"
+            data-bs-target="#collapseAdd">
+        <label class="btn btn-outline-primary" for="add">
+            <i title="Add item" class="bi bi-plus-circle"></i>
+        </label>
+
+        <div class="collapse" id="collapseAdd">
+            <div class="form-floating mt-3">
+                <textarea name="quickAdd" id="quickAdd" class="form-control" [(ngModel)]="quickAddText" placeholder=""></textarea>
+                <label for="quickAdd">Quick Add</label>
+            </div>
+            <button class="btn btn-primary mt-3" (click)="quickAdd()"><i class="bi bi-plus"></i></button>
+        </div>
+    </div>
+
+    <div *ngIf="records.length || isLoading; else Empty">
+        <div class="card my-5 shadow" *ngFor="let rec of records">
+            <div class="card-body">
+                <div class="card-title d-flex text-center bg-primary text-white p-2 rounded shadow">
+                    <div class="flex-grow-1">
+                        {{rec.id}}
                     </div>
-                    <p>{{rec.value}}</p>
+                    <a [routerLink]="['edit',rec.id]" class="text-white"><i class="bi bi-pencil me-2"></i></a>
+                    <a (click)="delete(rec)" class="text-white"><i class="bi bi-trash"></i></a>
                 </div>
+                <p>{{rec.value}}</p>
             </div>
         </div>
     </div>
+
+    <div class="text-center" *ngIf="isLoading">
+        Loading
+        <span class="spinner-border spinner-border-sm" role="status"></span>
+    </div>
+
 </div>
 
 
 <ng-template #Empty>
     <div class="my-3 alert alert-info">No records found.</div>
-</ng-template>
-
-<ng-template #Loading>
-    <div class="text-center">Loading</div>
 </ng-template>

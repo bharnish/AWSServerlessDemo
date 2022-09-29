@@ -17,8 +17,10 @@ export class RecordsListComponent implements OnInit {
 
   records: DbRecord[] = [];
   isLoading = false;
+  quickAddText = '';
 
   load() { 
+    this.quickAddText = '';
     this.isLoading = true;
     this.svc.getApiValues().subscribe(x => {
       this.records = x;
@@ -28,5 +30,9 @@ export class RecordsListComponent implements OnInit {
 
   delete(rec: DbRecord) {
     this.svc.deleteApiValuesId(rec.id??'').subscribe(_ => this.load());
+  }
+
+  quickAdd() { 
+    this.svc.postApiValues({value: this.quickAddText}).subscribe(_ => this.load());
   }
 }
