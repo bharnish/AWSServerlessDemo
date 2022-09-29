@@ -1,0 +1,13 @@
+<div class="container mt-3">
+    <div class="form-floating">
+        <textarea class="form-control" name="value" id="value" cols="80" rows="10" [(ngModel)]="model.value"></textarea>
+        <label for="value">Value</label>
+    </div>
+    <button class="btn btn-primary" title="Save" (click)="save()"><i class="bi bi-plus" *ngIf="!isSaving; else Saving"></i></button>
+</div>
+
+
+
+<ng-template #Saving>
+    ...
+</ng-template>
