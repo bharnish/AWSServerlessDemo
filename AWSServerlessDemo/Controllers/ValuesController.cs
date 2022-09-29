@@ -22,7 +22,9 @@ namespace AWSServerlessDemo.Controllers
         public async Task<IEnumerable<DbRecord>> Get()
         {
             var scan = _repo.ScanAsync<DbRecord>(null);
-            return await scan.GetRemainingAsync();
+            var records = await scan.GetRemainingAsync();
+
+            return records.OrderByDescending(x => x.Updated);
         }
 
         // GET api/values/5
@@ -39,6 +41,7 @@ namespace AWSServerlessDemo.Controllers
             var record = new DbRecord
             {
                 Value = value.Value,
+                Updated = DateTime.UtcNow,
             };
 
             await _repo.SaveAsync(record);
@@ -50,6 +53,7 @@ namespace AWSServerlessDemo.Controllers
         {
             var record = await _repo.LoadAsync<DbRecord>(id);
             record.Value = value.Value;
+            record.Updated = DateTime.UtcNow;
             await _repo.SaveAsync(record);
         }
 
@@ -75,5 +79,6 @@ namespace AWSServerlessDemo.Controllers
     {
         [DynamoDBHashKey] public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Value { get; set; }
+        public DateTime Updated { get; set; }
     }
 }
