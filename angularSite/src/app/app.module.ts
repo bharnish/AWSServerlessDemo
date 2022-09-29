@@ -8,12 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RecordAddEditComponent } from './record-add-edit/record-add-edit.component';
+import { RecordsListComponent } from './records-list/records-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    RecordAddEditComponent
+    RecordAddEditComponent,
+    RecordsListComponent
   ],
   imports: [
     BrowserModule,

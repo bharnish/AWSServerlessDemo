@@ -1,0 +1,26 @@
+<div class="container">
+    <div *ngIf="!isLoading; else Loading">
+        <div *ngIf="records.length; else Empty">
+            <div class="card my-3" *ngFor="let rec of records">
+                <div class="card-body">
+                    <div class="card-title d-flex text-center bg-primary text-white p-2">
+                        <div class="flex-grow-1">
+                            {{rec.id}}
+                        </div>
+                        <a (click)="delete(rec)" class="text-white"><i class="bi bi-trash"></i></a>
+                    </div>
+                    <p>{{rec.value}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #Empty>
+    <div class="my-3 alert alert-info">No records found.</div>
+</ng-template>
+
+<ng-template #Loading>
+    <div class="text-center">Loading</div>
+</ng-template>
