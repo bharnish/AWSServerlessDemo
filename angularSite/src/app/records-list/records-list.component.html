@@ -3,7 +3,7 @@
     <div class="my-3">
         <input type="checkbox" class="btn-check" name="add" id="add" data-bs-toggle="collapse"
             data-bs-target="#collapseAdd">
-        <label class="btn btn-outline-primary" for="add">
+        <label class="btn btn-outline-primary animate__animated" for="add" [ngClass]="{animate__bounce:!records.length&&!isLoading}">
             <i title="Add item" class="bi bi-plus-circle"></i>
         </label>
 
