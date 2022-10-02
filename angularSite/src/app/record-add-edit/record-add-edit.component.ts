@@ -16,6 +16,7 @@ export class RecordAddEditComponent implements OnInit {
   isSaving = false;
   isAdd = false;
   id = '';
+  added = '';
 
   ngOnInit(): void {
     this.routed.paramMap.subscribe(p => {
@@ -37,10 +38,13 @@ export class RecordAddEditComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    this.added = '';
     if (this.isAdd) {
 
       this.svc.postApiValues(this.model).subscribe(x => {
         this.isSaving = false;
+        this.added = x;
+        this.model = { };
       });
     } else {
       this.svc.putApiValuesId({id: this.id, body: this.model}).subscribe(_ => {

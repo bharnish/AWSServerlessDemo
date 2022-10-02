@@ -61,8 +61,9 @@ class ValuesService extends __BaseService {
 
   /**
    * @param body undefined
+   * @return Success
    */
-  postApiValuesResponse(body?: StringDto): __Observable<__StrictHttpResponse<null>> {
+  postApiValuesResponse(body?: StringDto): __Observable<__StrictHttpResponse<string>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -74,22 +75,23 @@ class ValuesService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'text'
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<string>;
       })
     );
   }
   /**
    * @param body undefined
+   * @return Success
    */
-  postApiValues(body?: StringDto): __Observable<null> {
+  postApiValues(body?: StringDto): __Observable<string> {
     return this.postApiValuesResponse(body).pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as string)
     );
   }
 

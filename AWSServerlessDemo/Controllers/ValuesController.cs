@@ -36,7 +36,7 @@ namespace AWSServerlessDemo.Controllers
 
         // POST api/values
         [HttpPost]
-        public async Task Post([FromBody]StringDto value)
+        public async Task<string> Post([FromBody]StringDto value)
         {
             var record = new DbRecord
             {
@@ -45,6 +45,8 @@ namespace AWSServerlessDemo.Controllers
             };
 
             await _repo.SaveAsync(record);
+
+            return record.Id;
         }
 
         // PUT api/values/5

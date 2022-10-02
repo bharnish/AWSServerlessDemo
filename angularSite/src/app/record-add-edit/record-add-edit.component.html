@@ -9,6 +9,10 @@
             <i class="bi bi-plus" *ngIf="isAdd; else Update"></i>
         </span>
     </button>
+
+    <div class="mt-3 alert alert-info" *ngIf="added">
+        Added {{added}}
+    </div>
 </div>
 
 
