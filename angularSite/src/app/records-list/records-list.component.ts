@@ -18,12 +18,17 @@ export class RecordsListComponent implements OnInit {
   records: DbRecord[] = [];
   isLoading = false;
   quickAddText = '';
+  isError = false;
 
   load() { 
     this.quickAddText = '';
     this.isLoading = true;
+    this.isError = false;
     this.svc.getApiValues().subscribe(x => {
       this.records = x;
+      this.isLoading = false;
+    }, err => {
+      this.isError = true;
       this.isLoading = false;
     });
   }

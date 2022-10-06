@@ -1,17 +1,19 @@
 <div class="container mt-3">
-    <h5 *ngIf="!isAdd">Id: {{model.id}}</h5>
-    <div class="form-floating my-3">
-        <textarea class="form-control" name="value" id="value" cols="80" rows="10" [(ngModel)]="model.value"></textarea>
-        <label for="value">Value</label>
-    </div>
-    <button class="btn btn-primary" title="Save" (click)="save()">
-        <span *ngIf="!isSaving; else Saving">
-            <i class="bi bi-plus" *ngIf="isAdd; else Update"></i>
-        </span>
-    </button>
-
-    <div class="mt-3 alert alert-info" *ngIf="added">
-        Added {{added}}
+    <div *ngIf="!isError; else Error">
+        <h5 *ngIf="!isAdd">Id: {{model.id}}</h5>
+        <div class="form-floating my-3">
+            <textarea class="form-control" name="value" id="value" cols="80" rows="10" [(ngModel)]="model.value"></textarea>
+            <label for="value">Value</label>
+        </div>
+        <button class="btn btn-primary" title="Save" (click)="save()">
+            <span *ngIf="!isSaving; else Saving">
+                <i class="bi bi-plus" *ngIf="isAdd; else Update"></i>
+            </span>
+        </button>
+        
+        <div class="mt-3 alert alert-info" *ngIf="added">
+            Added {{added}}
+        </div>
     </div>
 </div>
 
@@ -23,4 +25,8 @@
 
 <ng-template #Update>
     <i class="bi bi-upload"></i>
+</ng-template>
+
+<ng-template #Error>
+    <div class="alert alert-danger mt-5">Error. Please try again later.</div>
 </ng-template>
