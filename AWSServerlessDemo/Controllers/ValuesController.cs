@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AWSServerlessDemo.Controllers
@@ -29,9 +30,13 @@ namespace AWSServerlessDemo.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<DbRecord> Get(string id)
+        [ProducesResponseType(200, Type = typeof(DbRecord))]
+        public async Task<IActionResult> Get(string id)
         {
-            return await _repo.LoadAsync<DbRecord>(id);
+            var record = await _repo.LoadAsync<DbRecord>(id);
+            if (record == null) return NotFound();
+
+            return Ok(record);
         }
 
         // POST api/values
@@ -51,12 +56,16 @@ namespace AWSServerlessDemo.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task Put(string id, [FromBody]StringDto value)
+        public async Task<IActionResult> Put(string id, [FromBody]StringDto value)
         {
             var record = await _repo.LoadAsync<DbRecord>(id);
+            if (record == null) return NotFound();
+
             record.Value = value.Value;
             record.Updated = DateTime.UtcNow;
             await _repo.SaveAsync(record);
+
+            return Ok();
         }
 
         // DELETE api/values/5
