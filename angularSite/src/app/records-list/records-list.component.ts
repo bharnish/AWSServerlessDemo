@@ -19,6 +19,7 @@ export class RecordsListComponent implements OnInit {
   isLoading = false;
   quickAddText = '';
   isError = false;
+  isAdding = false;
 
   load() { 
     this.quickAddText = '';
@@ -38,6 +39,10 @@ export class RecordsListComponent implements OnInit {
   }
 
   quickAdd() { 
-    this.svc.postApiValues({value: this.quickAddText}).subscribe(_ => this.load());
+    this.isAdding = true;
+    this.svc.postApiValues({value: this.quickAddText}).subscribe(_ => {
+      this.load();
+      this.isAdding = false;
+    });
   }
 }

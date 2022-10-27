@@ -15,7 +15,10 @@
                         placeholder=""></textarea>
                     <label for="quickAdd">Quick Add</label>
                 </div>
-                <button class="btn btn-primary mt-3" (click)="quickAdd()"><i class="bi bi-plus"></i></button>
+                <button class="btn btn-primary mt-3" (click)="quickAdd()" [ngSwitch]="isAdding">
+                    <span *ngSwitchCase="false"><i class="bi bi-plus"></i></span>
+                    <span *ngSwitchCase="true" class="spinner-border spinner-border-sm"></span>
+                </button>
             </div>
         </div>
 
