@@ -7,7 +7,10 @@
         </div>
         <button class="btn btn-primary" title="Save" (click)="save()">
             <span *ngIf="!isSaving; else Saving">
-                <i class="bi bi-plus" *ngIf="isAdd; else Update"></i>
+                <span [ngSwitch]="isAdd">
+                    <i class="bi bi-plus" *ngSwitchCase="true"></i>
+                    <i class="bi bi-upload" *ngSwitchCase="false"></i>
+                </span>
             </span>
         </button>
         
@@ -21,10 +24,6 @@
 
 <ng-template #Saving>
     ...
-</ng-template>
-
-<ng-template #Update>
-    <i class="bi bi-upload"></i>
 </ng-template>
 
 <ng-template #Error>
