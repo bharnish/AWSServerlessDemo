@@ -1,2 +1,6 @@
+<div [ngSwitch]="env">
+    <div *ngSwitchCase="'stag'" class="bg-warning p-2"></div>
+    <div *ngSwitchCase="'dev'" class="bg-success p-2"></div>
+</div>
 
 <router-outlet></router-outlet>

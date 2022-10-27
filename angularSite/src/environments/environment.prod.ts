@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  rootUrl: 'https://03ehz7peki.execute-api.us-east-1.amazonaws.com/Prod',
+  env: (<any>window)._env.env,
+  rootUrl: (<any>window)._env.backendUrl,
 };

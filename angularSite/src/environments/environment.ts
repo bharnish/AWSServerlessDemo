@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  env: 'dev',
   rootUrl: 'https://localhost:44342',
   // rootUrl: 'https://03ehz7peki.execute-api.us-east-1.amazonaws.com/Prod',
 };
