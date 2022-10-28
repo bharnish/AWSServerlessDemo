@@ -1,18 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+using AWSServerlessDemo.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace AWSServerlessDemo
 {
@@ -31,8 +23,7 @@ namespace AWSServerlessDemo
             services.AddControllers();
             services.AddSwaggerGen();
 
-            services.AddScoped<IDynamoDBContext, DynamoDBContext>();
-            services.AddScoped<IAmazonDynamoDB, AmazonDynamoDBClient>();
+            services.AddDbContext<DemoDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

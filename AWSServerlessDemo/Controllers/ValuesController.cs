@@ -2,30 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AWSServerlessDemo.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
     {
-        private readonly IDynamoDBContext _repo;
+        private readonly DemoDbContext _dbContext;
 
-        public ValuesController(IDynamoDBContext repo)
+        public ValuesController(DemoDbContext dbContext)
         {
-            _repo = repo;
+            _dbContext = dbContext;
         }
 
         // GET api/values
         [HttpGet]
         public async Task<IEnumerable<DbRecord>> Get()
         {
-            var scan = _repo.ScanAsync<DbRecord>(null);
-            var records = await scan.GetRemainingAsync();
-
-            return records.OrderByDescending(x => x.Updated);
+            return await _dbContext.DbRecords.AsNoTracking().OrderByDescending(x => x.Updated).ToListAsync();
         }
 
         // GET api/values/5
@@ -33,7 +29,7 @@ namespace AWSServerlessDemo.Controllers
         [ProducesResponseType(200, Type = typeof(DbRecord))]
         public async Task<IActionResult> Get(string id)
         {
-            var record = await _repo.LoadAsync<DbRecord>(id);
+            var record = await _dbContext.DbRecords.AsNoTracking().WithId(id).FirstOrDefaultAsync();
             if (record == null) return NotFound();
 
             return Ok(record);
@@ -49,7 +45,9 @@ namespace AWSServerlessDemo.Controllers
                 Updated = DateTime.UtcNow,
             };
 
-            await _repo.SaveAsync(record);
+            await _dbContext.DbRecords.AddAsync(record);
+
+            await _dbContext.SaveChangesAsync();
 
             return record.Id;
         }
@@ -58,12 +56,12 @@ namespace AWSServerlessDemo.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody]StringDto value)
         {
-            var record = await _repo.LoadAsync<DbRecord>(id);
+            var record = await _dbContext.DbRecords.WithId(id).FirstOrDefaultAsync();
             if (record == null) return NotFound();
 
             record.Value = value.Value;
             record.Updated = DateTime.UtcNow;
-            await _repo.SaveAsync(record);
+            await _dbContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -72,7 +70,13 @@ namespace AWSServerlessDemo.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(string id)
         {
-            await _repo.DeleteAsync<DbRecord>(id);
+            var record = await _dbContext.DbRecords.WithId(id).FirstOrDefaultAsync();
+            if (record == null)
+                return;
+
+            _dbContext.DbRecords.Remove(record);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 
@@ -81,15 +85,39 @@ namespace AWSServerlessDemo.Controllers
         public string Value { get; set; }
     }
 
-#if DEBUG
-    [DynamoDBTable("AWSServerless-Demo")]
-#else
-    [DynamoDBTable("AWSServerlessDemo")]
-#endif
     public class DbRecord
     {
-        [DynamoDBHashKey] public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Value { get; set; }
         public DateTime Updated { get; set; }
+
+        /*
+            create table dbRecords (
+                id nvarchar (128) not null,
+                primary key (id),
+                value nvarchar(max) not null,
+                updated datetime not null,
+            )
+         */
+    }
+
+    public class DemoDbContext : DbContext
+    {
+        public DbSet<DbRecord> DbRecords { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=SSPI;Initial Catalog=test");
+
+            base.OnConfiguring(optionsBuilder);
+        }
+    }
+
+    public static class Extensions
+    {
+        public static IQueryable<DbRecord> WithId(this IQueryable<DbRecord> self, string id)
+        {
+            return self.Where(x => x.Id == id);
+        }
     }
 }
