@@ -21,6 +21,7 @@ export class RecordsListComponent implements OnInit {
   isError = false;
   isAdding = false;
   isEdit: boolean[] = [];
+  filterText = '';
 
   load() { 
     this.quickAddText = '';
@@ -50,5 +51,9 @@ export class RecordsListComponent implements OnInit {
 
   update(rec: DbRecord) {
     this.svc.putApiValuesId({id: rec.id??'', body: rec}).subscribe(_ => this.load());
+  }
+
+  filter() { 
+    this.records = this.records.filter(r => r.value?.includes(this.filterText));
   }
 }

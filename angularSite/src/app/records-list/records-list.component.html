@@ -2,12 +2,21 @@
 <div class="container">
     <div *ngIf="!isError; else Error">
         <div class="my-3">
-            <input type="checkbox" class="btn-check" name="add" id="add" data-bs-toggle="collapse"
-                data-bs-target="#collapseAdd">
-            <label class="btn btn-outline-primary animate__animated" for="add"
-                [ngClass]="{animate__bounce:!records.length&&!isLoading}">
-                <i title="Add item" class="bi bi-plus-circle"></i>
-            </label>
+            <div class="hstack gap-2">
+
+                <input type="checkbox" class="btn-check" name="add" id="add" data-bs-toggle="collapse"
+                    data-bs-target="#collapseAdd">
+                <label class="btn btn-outline-primary animate__animated" for="add"
+                    [ngClass]="{animate__bounce:!records.length&&!isLoading}">
+                    <i title="Add item" class="bi bi-plus-circle"></i>
+                </label>
+
+                <input type="checkbox" class="btn-check" name="filter" id="filter" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFilter">
+                <label class="btn btn-outline-primary" for="filter">
+                    <i title="Filter" class="bi bi-filter"></i>
+                </label>
+            </div>
 
             <div class="collapse" id="collapseAdd">
                 <div class="form-floating mt-3">
@@ -20,6 +29,14 @@
                     <span *ngSwitchCase="true" class="spinner-border spinner-border-sm"></span>
                 </button>
             </div>
+
+            <div class="collapse" id="collapseFilter">
+                <div class="form-floating mt-3">
+                    <input type="text" name="filterInput" id="filterInput" class="form-control" [(ngModel)]="filterText" (input)="filter()">
+                    <label for="filterInput">Filter</label>
+                </div>
+                <button class="btn btn-primary mt-3" (click)="filterText = '';load()" title="Clear Filter"><i class="bi bi-x"></i></button>
+            </div>
         </div>
 
         <div *ngIf="records.length || isLoading; else Empty">
@@ -30,16 +47,20 @@
                             {{rec.id}}
                         </div>
                         <div class="hstack gap-2">
-                            <a class="text-white" (click)="isEdit[ix] = true" title="Inline edit"><i class="bi bi-pencil-square"></i></a>
-                            <a [routerLink]="['edit',rec.id]" class="text-white" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <a class="text-white" (click)="isEdit[ix] = true" title="Inline edit"><i
+                                    class="bi bi-pencil-square"></i></a>
+                            <a [routerLink]="['edit',rec.id]" class="text-white" title="Edit"><i
+                                    class="bi bi-pencil"></i></a>
                             <a (click)="delete(rec)" class="text-white" title="Delete"><i class="bi bi-trash"></i></a>
                         </div>
                     </div>
                     <div [ngSwitch]="isEdit[ix]">
                         <div *ngSwitchCase="true">
                             <div class="vstack gap-2">
-                                <textarea name="edit-{{rec.id}}" id="edit-{{rec.id}}" class="form-control" [(ngModel)]="rec.value"></textarea>
-                                <div class="col"><button class="btn btn-primary" (click)="update(rec)" title="Update"><i class="bi bi-upload"></i></button></div>
+                                <textarea name="edit-{{rec.id}}" id="edit-{{rec.id}}" class="form-control"
+                                    [(ngModel)]="rec.value"></textarea>
+                                <div class="col"><button class="btn btn-primary" (click)="update(rec)" title="Update"><i
+                                            class="bi bi-upload"></i></button></div>
                             </div>
                         </div>
                         <p *ngSwitchCase="false">{{rec.value}}</p>
@@ -63,4 +84,3 @@
 <ng-template #Error>
     <div class="mt-5 alert alert-danger">Error. Please try again later.</div>
 </ng-template>
-
