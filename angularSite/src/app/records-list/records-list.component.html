@@ -15,7 +15,7 @@
                         placeholder=""></textarea>
                     <label for="quickAdd">Quick Add</label>
                 </div>
-                <button class="btn btn-primary mt-3" (click)="quickAdd()" [ngSwitch]="isAdding">
+                <button class="btn btn-primary mt-3" (click)="quickAdd()" [ngSwitch]="isAdding" title="Add">
                     <span *ngSwitchCase="false"><i class="bi bi-plus"></i></span>
                     <span *ngSwitchCase="true" class="spinner-border spinner-border-sm"></span>
                 </button>
@@ -23,16 +23,27 @@
         </div>
 
         <div *ngIf="records.length || isLoading; else Empty">
-            <div class="card my-5 shadow" *ngFor="let rec of records">
+            <div class="card my-5 shadow" *ngFor="let rec of records; index as ix">
                 <div class="card-body">
                     <div class="card-title d-flex text-center bg-primary text-white p-2 rounded shadow">
                         <div class="flex-grow-1">
                             {{rec.id}}
                         </div>
-                        <a [routerLink]="['edit',rec.id]" class="text-white"><i class="bi bi-pencil me-2"></i></a>
-                        <a (click)="delete(rec)" class="text-white"><i class="bi bi-trash"></i></a>
+                        <div class="hstack gap-2">
+                            <a class="text-white" (click)="isEdit[ix] = true" title="Inline edit"><i class="bi bi-pencil-square"></i></a>
+                            <a [routerLink]="['edit',rec.id]" class="text-white" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <a (click)="delete(rec)" class="text-white" title="Delete"><i class="bi bi-trash"></i></a>
+                        </div>
                     </div>
-                    <p>{{rec.value}}</p>
+                    <div [ngSwitch]="isEdit[ix]">
+                        <div *ngSwitchCase="true">
+                            <div class="vstack gap-2">
+                                <textarea name="edit-{{rec.id}}" id="edit-{{rec.id}}" class="form-control" [(ngModel)]="rec.value"></textarea>
+                                <div class="col"><button class="btn btn-primary" (click)="update(rec)" title="Update"><i class="bi bi-upload"></i></button></div>
+                            </div>
+                        </div>
+                        <p *ngSwitchCase="false">{{rec.value}}</p>
+                    </div>
                 </div>
             </div>
         </div>
