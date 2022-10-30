@@ -20,6 +20,8 @@ export class RecordsListComponent implements OnInit {
   quickAddText = '';
   isError = false;
   isAdding = false;
+  isEdit: boolean[] = [];
+  filterText = '';
 
   load() { 
     this.quickAddText = '';
@@ -27,6 +29,7 @@ export class RecordsListComponent implements OnInit {
     this.isError = false;
     this.svc.getApiValues().subscribe(x => {
       this.records = x;
+      this.isEdit = x.map(_ => false);
       this.isLoading = false;
     }, err => {
       this.isError = true;
@@ -44,5 +47,13 @@ export class RecordsListComponent implements OnInit {
       this.load();
       this.isAdding = false;
     });
+  }
+
+  update(rec: DbRecord) {
+    this.svc.putApiValuesId({id: rec.id??'', body: rec}).subscribe(_ => this.load());
+  }
+
+  filter() { 
+    this.records = this.records.filter(r => r.value?.includes(this.filterText));
   }
 }
